@@ -48,11 +48,8 @@ class User extends Authenticatable
     ];
 
 
-    public static function CreateUpdateSocialUser($provier, User $user){
 
-        $user = self::updateOrCreate(['email' => $user['email']],[
-
-        ]);
-
+    public function sentiments(){
+        return $this->hasMany(Sentiments::class);
     }
 }
