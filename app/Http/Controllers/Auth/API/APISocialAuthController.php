@@ -21,7 +21,7 @@ class APISocialAuthController extends Controller
 
 
     public function getProviderRedirect($provider){
-        // dd($provider);
+
         return Socialite::driver($provider)->stateless()->redirect();
 
     }
@@ -33,26 +33,50 @@ class APISocialAuthController extends Controller
         // dd($request->code);
             $code = $request->code;
             $user =  Socialite::driver($provider)->stateless()->user();
-            dd($user);
-            if($provider == User::SOCIAL_PROVIDER_GOOGLE && isset($user['email'])){
-                $updatedUser = User::updateOrCreate(['email' =>   $user['email']],
-                [ 
-                    'name' => $user['name'], 
-                    'provider_id' => $user['id'],
-                    'image_url' => $user['picture'],
-                    'is_social' => 1,
-
-                    ]
-                );
-                if($updatedUser ){
+            // dd($user);
+            $updatedUser = $this->updateUserData($provider, $user);
+                if($updatedUser){
                     $token = $updatedUser->createToken('password_grant_ai_app')->accessToken;
-                    return new JsonResponse(['token' => $token->token]);
+                    $title = $provider == User::SOCIAL_PROVIDER_FACEBOOK ? 'Facebook Login': 'Google Login';
+                    return new JsonResponse(['token' => $token->token,'title' => $title ]);
                 }
-            }
 
         }catch(Exception $e){
             // dd($e->getMessage());
-            new JsonResponse(['error' => $e->getMessage(),'title' => 'Authentication Failed']);
+            new JsonResponse(['error' => $e->getMessage(),'title' => $provider.' Authentication Failed']);
         }
+    }
+
+
+    private function updateUserData($provider, $user): User|null{
+        $updatedUser = null;
+        if($provider == User::SOCIAL_PROVIDER_GOOGLE && isset($user['email'])){
+            $updatedUser = User::updateOrCreate(['email' =>   $user['email']],
+            [ 
+                'name' => $user['name'], 
+                'provider_id' => $user['id'],
+                'image_url' => $user['picture'],
+                'is_social' => 1,
+                'provider' => User::SOCIAL_PROVIDER_GOOGLE
+
+                ]
+            );
+        }
+
+        if($provider == User::SOCIAL_PROVIDER_FACEBOOK && isset($user['email'])){
+            $updatedUser = User::updateOrCreate(['email' =>   $user['email']],
+            [ 
+                'name' => $user['name'], 
+                'provider_id' => $user['id'],
+                // 'image_url' => $user['picture'],
+                'is_social' => 1,
+                'provider' => User::SOCIAL_PROVIDER_FACEBOOK,
+
+
+                ]
+            );
+           
+        }
+        return $updatedUser;
     }
 }
