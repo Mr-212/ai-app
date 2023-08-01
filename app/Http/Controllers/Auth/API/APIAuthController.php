@@ -11,10 +11,12 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 class APIAuthController extends Controller
 {
-    //
+    /* api user login
+    params: email: string, password: string
+    return @response
+    */
 
     public function login(Request $request){
-        // dd($request->all());
 
         try{
             if($request->has('email') && $request->has('password')){

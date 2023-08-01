@@ -11,7 +11,8 @@
         "laravel/passport": "^11.8",
         "laravel/sanctum": "^3.0",
         "laravel/socialite": "^5.8",
-        "laravel/tinker": "^2.7"
+        "laravel/tinker": "^2.7",
+        "openai-php/laravel": "^0.6.3"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
@@ -58,7 +59,8 @@
         "preferred-install": "dist",
         "sort-packages": true,
         "allow-plugins": {
-            "pestphp/pest-plugin": true
+            "pestphp/pest-plugin": true,
+            "php-http/discovery": true
         }
     },
     "minimum-stability": "stable",
