@@ -1,0 +1,42 @@
+version: '3.7'
+services:
+    ai-backend:
+        container_name: ai-backend
+        image: docker_env_php80
+        ports:
+            # - '2525:2525'
+            - '8000:8000'
+        working_dir: /var/www/ai-app
+        volumes:
+            - './:/var/www/ai-app'
+            - './entry_point.sh:/usr/local/bin/entry_point.sh'
+        restart: unless-stopped
+        command: 'bash -c "apachectl -D FOREGROUND"'
+            # - php artisan serve --port=8000 --host=0.0.0.0
+        entrypoint: 
+            - '/usr/local/bin/entry_point.sh'      
+        networks:
+            - app
+        
+    # ai-frontend:
+    #     container_name: ai-frontend
+    #     image: docker_env_php80
+    #     ports:
+    #         - '3001:3001'
+    #         - '5173:5173'
+    #     working_dir: /var/www/ai-app
+    #     volumes:
+    #         - './:/var/www/ai-app'
+    #         # - './docker/entry_node.sh:/usr/local/bin/entry_node.sh'
+    #     tty: true
+    #     restart: unless-stopped
+    #     # entrypoint:
+    #     #     - /usr/local/bin/entry_node.sh
+    #     networks:
+    #         - app
+networks:
+    app:
+        name: local
+        external: true
+# volumes:
+ 
