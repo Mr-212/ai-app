@@ -33,7 +33,7 @@ class APISocialAuthController extends Controller
         // dd($request->code);
             $code = $request->code;
             $user =  Socialite::driver($provider)->stateless()->user();
-
+            dd($user);
             if($provider == User::SOCIAL_PROVIDER_GOOGLE && isset($user['email'])){
                 $updatedUser = User::updateOrCreate(['email' =>   $user['email']],
                 [ 
@@ -49,9 +49,10 @@ class APISocialAuthController extends Controller
                     return new JsonResponse(['token' => $token->token]);
                 }
             }
+
         }catch(Exception $e){
             // dd($e->getMessage());
-            new JsonResponse(['error' => $e->getMessage(),'message' => 'Authentication Failed']);
+            new JsonResponse(['error' => $e->getMessage(),'title' => 'Authentication Failed']);
         }
     }
 }
