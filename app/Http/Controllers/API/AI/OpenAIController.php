@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\API\AI;
 
 use App\Http\Controllers\Controller;
-// use App\Services\OpenAIService;
+use App\Services\OpenAIService;
 use Illuminate\Http\Request;
 use OpenAI\Laravel\Facades\OpenAI;
 
@@ -11,16 +11,13 @@ use OpenAI\Laravel\Facades\OpenAI;
 class OpenAIController extends Controller
 {
     //
-    private $chatgptModel;
+    private $openAIService;
+
 
     public function __construct()
     {
-        //$this->openAiService = new OpenAIService(env('OPENAI_CLIENT'), env('OPENAI_SECRET'));
-        // $this->chatgptModel = 'gpt-3.5-turbo';
-        // $this->chatgptModel = 'text-davinci-003';
-        $this->chatgptModel = 'ada';
-
-
+        $this->openAIService = new OpenAIService();
+        
     }
 
 
@@ -28,12 +25,7 @@ class OpenAIController extends Controller
         // dd($request->all());
         
         if($request->has('text')){
-            $result = OpenAI::completions()->create([
-                'model' => $this->chatgptModel,
-                'prompt' => $request->text,
-            ]);
-
-            dd($result);
+            $this->openAIService->generate($request->text);
         }
     }
 
