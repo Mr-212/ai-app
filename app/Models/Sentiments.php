@@ -11,6 +11,8 @@ class Sentiments extends Model
 
     const SENTIMENT_TYPE_HATE = 'HATE';
     const SENTIMENT_TYPE_LOVE = 'LOVE';
+    const SENTIMENT_TYPE_NEUTRAL = 'NEUTRAL';
+
 
     const AI_SOURCE_GOOGLE_NLP = 'GOOGLE NATURAL LANGUAGE';
     const AI_SOIRCE_OPENAI = 'OPEN AI';
