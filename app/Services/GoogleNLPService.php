@@ -13,15 +13,12 @@ use Google\Cloud\Core\ServiceBuilder;
 // use JoggApp\NaturalLanguage\NaturalLanguage;
 
 class GoogleNLPService {
+
     protected $nlp, $client;
-
-
 
     public function __construct()
     {
         // dd(Config::get('naturallanguage'));
-        
-
         // $this->nlp = new NaturalLanguage(new NaturalLanguageClient(Config::get('naturallanguage')));
         // $this->client = new LanguageClient(['KeyFile' => Config::get('naturallanguage.keyfile'),'ProjectId' => Config::get('naturallanguage.project')]);
         $this->client = new ServiceBuilder(['keyFilePath' => Config::get('naturallanguage.keyfile'),'ProjectId' => Config::get('naturallanguage.project')]);
@@ -35,7 +32,7 @@ class GoogleNLPService {
     }
 
 
-    public function sentiment($text){
+    public function generateSentiment($text){
         try{
         // $sentiment = $this->nlp->entitySentiment('AI is rocking');
         // $sentiment = NaturalLanguageFacade::sentiment($text);

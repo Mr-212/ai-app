@@ -3,14 +3,13 @@ namespace App\Services;
 use OpenAI\Laravel\Facades\OpenAI;
 
 class OpenAIService {
+
     private $chatgptModel;
 
     public function __construct()
     {
-        $this->chatgptModel = 'gpt-3.5-turbo';
+        $this->chatgptModel = 'ada';
     }
-
-
 
     public function generateSentiment($text){
         $result = OpenAI::completions()->create([
@@ -18,7 +17,7 @@ class OpenAIService {
             'prompt' => $text,
         ]);
 
-        dd($result);
+        // dd($result);
 
         if(isset($result['choices'])){
             $string = $result['choices'][0]['text'];

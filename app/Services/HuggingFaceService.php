@@ -17,8 +17,12 @@ class HuggingFaceService {
 
     public function generateSentiment($text){
         $url = 'https://api-inference.huggingface.co/models/distilbert-base-uncased-finetuned-sst-2-english';
+
+        $headers[] = "Authorization: Bearer $this->api_key";
+        $headers[] = "Content-Type: application/x-www-form-urlencoded";
+
         $query = ["inputs" =>"{$text}"];
-        $result =$this->curl_reequest($query, $url);
+        $result =$this->curl_reequest($query, $url, $headers);
         // dd($result);
         $response = [];
         if(isset($result[0]) && !empty($result[0])){
@@ -32,19 +36,26 @@ class HuggingFaceService {
     }
 
     public function generateText($text){
-       $url = "https://api-inference.huggingface.co/models/gpt2";
-       $query = ["inputs" =>"{$text}",];
-        // $result =  $result->toArray();
-        $result =$this->curl_reequest($query, $url);
+        $url = "https://api-inference.huggingface.co/models/EleutherAI/gpt-j-6b";
 
+        $headers[] = "Authorization: Bearer $this->api_key";
+        $headers[] = "Content-Type: application/x-www-form-urlencoded";
+
+        $query = ["inputs" =>"{$text}"];
+        $result =$this->curl_reequest($query, $url, $headers);
+        dd($result);
         dd($result[0]['generated_text']);
+      
+    }
 
-        // if(isset($result['choices'])){
-        //     $string = $result['choices'][0]['text'];
-        //     return $string;
-        //     // dd($result[]);
-        // }
+    public function generateText1($text){
+        $response = $this->client->inference()->create([
+            'model' => 'rugpt3large_based_on_gpt2',
+            'inputs' => "{$text}",
+            'type' => Type::TEXT_GENERATION,
+        ]);
 
+        dd($response['generated_text']);
       
     }
 
@@ -54,26 +65,24 @@ class HuggingFaceService {
         $query = ["inputs" =>"I like you. I love you"];
         $data = http_build_query($query);    
         $url = 'https://api-inference.huggingface.co/models/distilbert-base-uncased-finetuned-sst-2-english';
-        $req = Http::withHeaders(
-            ["Authorization" => "Bearer $this->api_key", "Content-Type" =>"application/x-www-form-urlencoded"])->post($url, 
-            $query
-        );
+
+        $res = Http::withHeaders([
+                "Authorization" => "Bearer $this->api_key", 
+                "Content-Type" =>"application/x-www-form-urlencoded"
+                ])->post($url, $query);
     
-        return $req;
+        return $res;
     }
 
 
-    private function curl_reequest($query, $url){
+    private function curl_reequest($query, $url, $headers){
+
             $ch = curl_init();
-            // $query = ["inputs" =>"{$text}"];
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($ch, CURLOPT_POST, 1);
             curl_setopt($ch, CURLOPT_POSTFIELDS, $query);
-
             $headers = array();
-            $headers[] = "Authorization: Bearer $this->api_key";
-            // $headers[] = "Content-Type: application/x-www-form-urlencoded";
             curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
             $result = curl_exec($ch);
@@ -81,7 +90,8 @@ class HuggingFaceService {
                 echo "Error:" . curl_error($ch);
             }
             curl_close($ch);
-
+            
+            // dd($result);
             $result = json_decode($result,1);
             return $result;
      }
