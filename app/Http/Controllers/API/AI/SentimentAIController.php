@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API\AI;
 
 use App\Http\Controllers\Controller;
+use App\Models\Sentiments;
 use App\Services\GoogleNLPService;
 use App\Services\OpenAIService;
 use Illuminate\Http\Request;
@@ -12,11 +13,12 @@ use Illuminate\Http\Request;
 class SentimentAIController extends Controller
 {
     //
-    private $openAIService, $googleNLPService;
+    private $openAIService, $googleNLPService, $sentimentModel;
 
 
-    public function __construct()
+    public function __construct(Sentiments $sentiment)
     {
+        $this->sentimentModel = $sentiment;
         $this->openAIService = new OpenAIService();
         $this->googleNLPService = new GoogleNLPService();
 
@@ -28,9 +30,19 @@ class SentimentAIController extends Controller
         // dd($request->all());
         
         if($request->has('text')){
-            $response = $this->googleNLPService->generate($request->text);
+
+            $record = $this->sentimentModel::create([
+                'comment_asked' => $request->get('text'),
+                'type' => $this->sentimentModel::SENTIMENT_TYPE_LOVE,
+                'user_id' => 1,
+                'ai_source' => $this->sentimentModel::AI_SOIRCE_OPENAI,
+            ]);
+
+            // $response = $this->googleNLPService->sentiment($request->text);
+            // $record->api_response = json_encode($response);
+            $response = $this->openAIService->sentiment($request->text);
+
             dd($response);
-            $response = $this->openAIService->generate($request->text);
         }
     }
 

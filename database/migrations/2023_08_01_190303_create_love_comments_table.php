@@ -22,7 +22,7 @@ return new class extends Migration
             $table->json('api_response')->nullable();
             $table->enum('sentiment_type',['POSITIVE','NEGETIVE', 'NEUTRAL']);
             $table->decimal('sentiment_score')->default(0.00);
-            $table->string('api_source')->nullable();
+            $table->string('ai_source')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();
         });
