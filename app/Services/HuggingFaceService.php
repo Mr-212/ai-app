@@ -11,16 +11,14 @@ class HuggingFaceService {
     public function __construct($api_key)
     {
         //gpt2
-        $this->chatgptModel = 'distilbert-base-uncased-finetuned-sst-2-english';
         $this->api_key= $api_key;
         $this->client = Huggingface::client($api_key);
     }
 
-
-
     public function generateSentiment($text){
         $url = 'https://api-inference.huggingface.co/models/distilbert-base-uncased-finetuned-sst-2-english';
-        $result =$this->curl_reequest($text, $url);
+        $query = ["inputs" =>"{$text}"];
+        $result =$this->curl_reequest($query, $url);
         // dd($result);
         $response = [];
         if(isset($result[0]) && !empty($result[0])){
@@ -34,17 +32,12 @@ class HuggingFaceService {
     }
 
     public function generateText($text){
-        $client = Huggingface::client($this->api_key);
-        $result = $client->inference()->create([
-            'model' => $this->chatgptModel,
-            'inputs' => $text,
-            'type' => Type::TEXT_GENERATION,
-          
-
-        ]);
+       $url = "https://api-inference.huggingface.co/models/gpt2";
+       $query = ["inputs" =>"{$text}",];
         // $result =  $result->toArray();
+        $result =$this->curl_reequest($query, $url);
 
-        dd($result);
+        dd($result[0]['generated_text']);
 
         // if(isset($result['choices'])){
         //     $string = $result['choices'][0]['text'];
@@ -70,9 +63,9 @@ class HuggingFaceService {
     }
 
 
-    private function curl_reequest($text, $url){
+    private function curl_reequest($query, $url){
             $ch = curl_init();
-            $query = ["inputs" =>"{$text}"];
+            // $query = ["inputs" =>"{$text}"];
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($ch, CURLOPT_POST, 1);
@@ -80,7 +73,7 @@ class HuggingFaceService {
 
             $headers = array();
             $headers[] = "Authorization: Bearer $this->api_key";
-            $headers[] = "Content-Type: application/x-www-form-urlencoded";
+            // $headers[] = "Content-Type: application/x-www-form-urlencoded";
             curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
             $result = curl_exec($ch);
