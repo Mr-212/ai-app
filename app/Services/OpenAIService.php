@@ -12,13 +12,21 @@ class OpenAIService {
 
 
 
-    public function sentiment($text){
+    public function generateSentiment($text){
         $result = OpenAI::completions()->create([
             'model' => $this->chatgptModel,
             'prompt' => $text,
         ]);
 
         dd($result);
+
+        if(isset($result['choices'])){
+            $string = $result['choices'][0]['text'];
+            return $string;
+            // dd($result[]);
+        }
+
+      
     }
 
 }
