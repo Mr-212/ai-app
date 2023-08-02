@@ -11,12 +11,8 @@ class OpenAIService {
     }
 
 
-    public function getConnction(){
 
-    }
-
-
-    public function generate($text){
+    public function sentiment($text){
         $result = OpenAI::completions()->create([
             'model' => $this->chatgptModel,
             'prompt' => $text,

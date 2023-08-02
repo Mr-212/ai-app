@@ -6,7 +6,9 @@
     "license": "MIT",
     "require": {
         "php": "^8.0",
+        "google/cloud-language": "^0.26.8",
         "guzzlehttp/guzzle": "^7.2",
+        "joggapp/laravel-natural-language": "^7.0",
         "laravel/framework": "^9.19",
         "laravel/passport": "^11.8",
         "laravel/sanctum": "^3.0",

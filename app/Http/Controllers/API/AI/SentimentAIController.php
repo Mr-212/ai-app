@@ -3,20 +3,23 @@
 namespace App\Http\Controllers\API\AI;
 
 use App\Http\Controllers\Controller;
+use App\Services\GoogleNLPService;
 use App\Services\OpenAIService;
 use Illuminate\Http\Request;
-use OpenAI\Laravel\Facades\OpenAI;
 
 
-class OpenAIController extends Controller
+
+class SentimentAIController extends Controller
 {
     //
-    private $openAIService;
+    private $openAIService, $googleNLPService;
 
 
     public function __construct()
     {
         $this->openAIService = new OpenAIService();
+        $this->googleNLPService = new GoogleNLPService();
+
         
     }
 
@@ -25,7 +28,9 @@ class OpenAIController extends Controller
         // dd($request->all());
         
         if($request->has('text')){
-            $this->openAIService->generate($request->text);
+            $response = $this->googleNLPService->generate($request->text);
+            dd($response);
+            $response = $this->openAIService->generate($request->text);
         }
     }
 

@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\API\AI\OpenAIController;
+use App\Http\Controllers\API\AI\SentimentAIController;
 use App\Http\Controllers\Auth\API\APIAuthController;
 use App\Http\Controllers\Auth\API\APISocialAuthController;
 use Illuminate\Http\Request;
@@ -24,7 +24,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::prefix('ai')->group(function(){
     Route::prefix('love')->group(function(){
 
-        Route::get('/generate',[OpenAIController::class,'generate']);
+        Route::get('/generate',[SentimentAIController::class,'generate']);
     });
 });
 
