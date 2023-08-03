@@ -35,7 +35,7 @@ class SentimentAIController extends Controller
         // dd($request->all());
         
         if($request->has('text')){
-            $sentiment = $this->phpSentimentAnalyzer($request->text);
+            $sentiment = $this->phpSentimentAnalyzer->generateSentiment($request->text);
             // dd($sentiment);
             // $record = $this->sentimentModel::create([
             //     'comment_asked' => $request->get('text'),
@@ -49,9 +49,9 @@ class SentimentAIController extends Controller
             // dd($record);
             // $response = $this->googleNLPService->generateSentiment($request->text);
             // $record->api_response = json_encode($response);
-            $response = $this->openAIService->generateText($request->text);
+            // $response = $this->openAIService->generateText($request->text);
             // $response = $this->hugginfFaceService->generateSentiment($request->text);
-            // $response = $this->hugginfFaceService->generateText($request->text);
+            $response = $this->hugginfFaceService->generateText($request->text);
 
 
             dd($response);

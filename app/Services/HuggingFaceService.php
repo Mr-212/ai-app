@@ -36,23 +36,26 @@ class HuggingFaceService {
     }
 
     public function generateText($text){
-        $url = "https://api-inference.huggingface.co/models/EleutherAI/gpt-j-6b";
+        $url = "https://api-inference.huggingface.co/models/gpt2";
 
         $headers[] = "Authorization: Bearer $this->api_key";
         $headers[] = "Content-Type: application/x-www-form-urlencoded";
 
-        $query = ["inputs" =>"{$text}"];
-        $result =$this->curl_reequest($query, $url, $headers);
+        $query = ["inputs" =>"{$text}","max_length"=>1000];
+        $result =$this->curl_reequest(json_encode($query,1), $url, $headers);
         dd($result);
         dd($result[0]['generated_text']);
       
     }
 
     public function generateText1($text){
+        
         $response = $this->client->inference()->create([
-            'model' => 'rugpt3large_based_on_gpt2',
+            'model' => 'distilgpt2',
             'inputs' => "{$text}",
             'type' => Type::TEXT_GENERATION,
+            'max_length' => 1000,
+            'min_length' => 200
         ]);
 
         dd($response['generated_text']);
