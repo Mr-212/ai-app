@@ -9,8 +9,13 @@ class Sentiments extends Model
 {
     use HasFactory;
 
-    const SENTIMENT_TYPE_HATE = 'HATE';
-    const SENTIMENT_TYPE_LOVE = 'LOVE';
+    const REQUEST_TYPE_HATE = 'HATE';
+    const REQUEST_TYPE_LOVE = 'LOVE';
+    // const SENTIMENT_TYPE_NEUTRAL = 'NEUTRAL';
+
+
+    const SENTIMENT_TYPE_HATE = 'NEGATIVE';
+    const SENTIMENT_TYPE_LOVE = 'POSITIVE';
     const SENTIMENT_TYPE_NEUTRAL = 'NEUTRAL';
 
 
@@ -18,7 +23,7 @@ class Sentiments extends Model
     const AI_SOIRCE_OPENAI = 'OPEN AI';
 
     protected $table = 'sentiments';
-    protected $fillable = ['user_id','type','api_response','comment_asked','ai_response','ai_source','sentiment_type','sentiment_score'];
+    protected $fillable = ['user_id','request_type','api_response','comment_asked','response_text','ai_source','sentiment_type','sentiment_score'];
 
 
     public function user(){

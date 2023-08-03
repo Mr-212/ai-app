@@ -16,7 +16,6 @@ class PHPTextAnalyzerService {
     public function generateSentiment($text){
 
         return $this->analyze($text);
-    
       
     }
 
@@ -25,11 +24,11 @@ class PHPTextAnalyzerService {
         $response = [];
         $sentiment = $this->analyzer->getSentiment($text);
         if($sentiment['neg'] < $sentiment['pos'] && ($sentiment['neu'] < $sentiment['pos'] || $sentiment['neu'] < $sentiment['neg'])){
-            // $response['sentiment_score'] = ;
-            $response['sentiment_type']  = $sentiment['pos'];
+            $response['sentiment_score'] = $sentiment['pos'];
+            $response['sentiment_type']  = Sentiments::SENTIMENT_TYPE_LOVE;
         }else{
-            // $response['sentiment_score'] = 
-            $response[Sentiments::SENTIMENT_TYPE_HATE]  = $sentiment['neg'];
+            $response['sentiment_score'] = $sentiment['neu'];
+            $response['sentiment_type']  = Sentiments::SENTIMENT_TYPE_HATE;
         }
 
         return $response;

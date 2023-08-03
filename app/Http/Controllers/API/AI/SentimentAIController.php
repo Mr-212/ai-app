@@ -10,8 +10,7 @@ use App\Services\OpenAIService;
 use Illuminate\Http\Request;
 
 use App\Services\PHPTextAnalyzerService;
-
-
+use Illuminate\Http\JsonResponse;
 
 class SentimentAIController extends Controller
 {
@@ -36,25 +35,26 @@ class SentimentAIController extends Controller
         
         if($request->has('text')){
             $sentiment = $this->phpSentimentAnalyzer->generateSentiment($request->text);
-            // dd($sentiment);
-            // $record = $this->sentimentModel::create([
-            //     'comment_asked' => $request->get('text'),
-            //     'type' => $this->sentimentModel::SENTIMENT_TYPE_LOVE,
-            //     'user_id' => 1,
-            //     'ai_source' => $this->sentimentModel::AI_SOIRCE_OPENAI,
-            //     'sentiment_score' => $sentiment['sentiment_score'],
-            //     'sentiment_type' => $sentiment['sentiment_type'],
-            // ]);
+            $sentiment = $this->hugginfFaceService->generateSentiment($request->text);
+            $responseText = $this->openAIService->generateText($request->text);
+            // dd($responseText ,str_replace(array("\n","\r\n","\r"), '',$responseText));
+            $record = $this->sentimentModel::create([
+                'comment_asked' => $request->get('text'),
+                'request_type' => $this->sentimentModel::REQUEST_TYPE_LOVE,
+                'user_id' => 1,
+                'ai_source' => $this->sentimentModel::AI_SOIRCE_OPENAI,
+                'sentiment_score' => $sentiment['sentiment_score'],
+                'sentiment_type' => $sentiment['sentiment_type'],
+                'response_text' => $responseText
+            ]);
 
             // dd($record);
             // $response = $this->googleNLPService->generateSentiment($request->text);
             // $record->api_response = json_encode($response);
-            // $response = $this->openAIService->generateText($request->text);
-            // $response = $this->hugginfFaceService->generateSentiment($request->text);
-            $response = $this->hugginfFaceService->generateText($request->text);
-
-
-            dd($response);
+            
+            dd($record);
+            // $response = $this->hugginfFaceService->generateText($request->text);
+            return new JsonResponse(['titles' => 'AI Response' , 'responseText' => $responseText,'sentiment' => $record->sentiment_type]);
         }
     }
 

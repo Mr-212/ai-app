@@ -27,7 +27,9 @@ class HuggingFaceService {
         $response = [];
         if(isset($result[0]) && !empty($result[0])){
             foreach($result[0] as $v) {
-                $response[ $v["label"] ] = $v['score'];
+                $response[ 'sentiment_type' ]  = $v['label'];
+                $response[ 'sentiment_score' ] = $v['score'];
+
             }
         }
         // dd($response);

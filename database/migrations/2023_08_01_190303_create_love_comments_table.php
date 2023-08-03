@@ -16,11 +16,11 @@ return new class extends Migration
         Schema::create('sentiments', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id')->nullable();
-            $table->enum('type',['LOVE','HATE']);
+            $table->enum('request_type',['LOVE','HATE']);
             $table->text('comment_asked')->nullable();
-            $table->text('ai_response')->nullable();
+            $table->text('response_text')->nullable();
             $table->json('api_response')->nullable();
-            $table->enum('sentiment_type',['POSITIVE','NEGETIVE', 'NEUTRAL']);
+            $table->enum('sentiment_type',['POSITIVE','NEGATIVE', 'NEUTRAL']);
             $table->decimal('sentiment_score')->default(0.00);
             $table->string('ai_source')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
