@@ -8,14 +8,15 @@ use App\Services\GoogleNLPService;
 use App\Services\HuggingFaceService;
 use App\Services\OpenAIService;
 use Illuminate\Http\Request;
-Use Sentiment\Analyzer;
+
+use App\Services\PHPTextAnalyzerService;
 
 
 
 class SentimentAIController extends Controller
 {
     //
-    private $openAIService, $googleNLPService, $sentimentModel, $analyzer, $hugginfFaceService;
+    private $openAIService, $googleNLPService, $sentimentModel, $phpSentimentAnalyzer, $hugginfFaceService;
 
 
     public function __construct(Sentiments $sentiment)
@@ -25,8 +26,7 @@ class SentimentAIController extends Controller
         $this->googleNLPService = new GoogleNLPService();
         // dd(env('HUGGING_FACE_API_KEY'));
         $this->hugginfFaceService = new HuggingFaceService('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');
-        $this->analyzer = new Analyzer();
-
+        $this->phpSentimentAnalyzer = new PHPTextAnalyzerService();
         
     }
 
@@ -35,7 +35,7 @@ class SentimentAIController extends Controller
         // dd($request->all());
         
         if($request->has('text')){
-            $sentiment = $this->analyze($request->text);
+            $sentiment = $this->phpSentimentAnalyzer($request->text);
             // dd($sentiment);
             // $record = $this->sentimentModel::create([
             //     'comment_asked' => $request->get('text'),
@@ -49,7 +49,7 @@ class SentimentAIController extends Controller
             // dd($record);
             // $response = $this->googleNLPService->generateSentiment($request->text);
             // $record->api_response = json_encode($response);
-            $response = $this->openAIService->generateSentiment($request->text);
+            $response = $this->openAIService->generateText($request->text);
             // $response = $this->hugginfFaceService->generateSentiment($request->text);
             // $response = $this->hugginfFaceService->generateText($request->text);
 
@@ -58,21 +58,5 @@ class SentimentAIController extends Controller
         }
     }
 
-
-    private function analyze(string $text): Array {
-
-        $response = [];
-        $sentiment = $this->analyzer->getSentiment($text);
-        if($sentiment['neg'] < $sentiment['pos'] && ($sentiment['neu'] < $sentiment['pos'] || $sentiment['neu'] < $sentiment['neg'])){
-            $response['sentiment_score'] = $sentiment['pos'];
-            $response['sentiment_type']  = $this->sentimentModel::SENTIMENT_TYPE_LOVE;
-        }else{
-            $response['sentiment_score'] = $sentiment['neu'];
-            $response['sentiment_type']  = $this->sentimentModel::SENTIMENT_TYPE_NEUTRAL;
-        }
-
-        return $response;
-
-    }
-
 }
+
