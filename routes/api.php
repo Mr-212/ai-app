@@ -17,13 +17,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
 
-Route::prefix('ai')->group(function(){
+Route::group(['prefix' =>'ai', 'middleware' => 'auth:api'],function(){
     Route::prefix('love')->group(function(){
-
         Route::get('/generate',[SentimentAIController::class,'generate']);
     });
 });
@@ -32,6 +31,8 @@ Route::prefix('auth')->group(function(){
     Route::get('/{provider}',[APISocialAuthController::class,'getProviderRedirect']);
     Route::get('/callback/{provider}',[APISocialAuthController::class,'callback']);
     Route::post('/login', [APIAuthController::class,'login']);
+    Route::post('/logout', [APIAuthController::class,'logout']);
 });
+
 
 

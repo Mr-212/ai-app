@@ -20,6 +20,7 @@ class SentimentAIController extends Controller
 
     public function __construct(Sentiments $sentiment)
     {
+        $this->middleware('auth:api');
         $this->sentimentModel = $sentiment;
         $this->openAIService = new OpenAIService();
         $this->googleNLPService = new GoogleNLPService();
@@ -52,7 +53,7 @@ class SentimentAIController extends Controller
             // $response = $this->googleNLPService->generateSentiment($request->text);
             // $record->api_response = json_encode($response);
             
-            dd($record);
+            // dd($record);
             // $response = $this->hugginfFaceService->generateText($request->text);
             return new JsonResponse(['titles' => 'AI Response' , 'responseText' => $responseText,'sentiment' => $record->sentiment_type]);
         }

@@ -11,9 +11,14 @@ class AppServiceProvider extends ServiceProvider
      *
      * @return void
      */
+
+     protected $policies = [
+        'App\Model' => 'App\Policies\ModelPolicy',
+    ];
     public function register()
     {
-        //
+      
+
     }
 
     /**
@@ -23,6 +28,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        // $this->registerPolicies();
     }
 }
